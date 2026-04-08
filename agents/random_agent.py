@@ -1,10 +1,17 @@
-# agents/random_agent.py
-
 import random
-from agents.base_agent import BaseAgent
+from typing import Any, Dict
 
-LABELS = ["important", "spam", "promotion", "social", "later"]
+from agents.base_agent import BaseAgent
+from agents.constants import LABELS
+
 
 class RandomAgent(BaseAgent):
-    def act(self, state):
+    """
+    Random baseline agent.
+    Useful as a lower-bound benchmark.
+    """
+
+    name = "random_agent"
+
+    def act(self, state: Dict[str, Any]) -> str:
         return random.choice(LABELS)
