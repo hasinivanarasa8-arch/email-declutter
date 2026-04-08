@@ -1,24 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AI Inbox Intelligence</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>⚡ AI Inbox Intelligence</h1>
+            <p class="subtitle">
+                Agentic inbox triage simulation for smart email classification under uncertainty
+            </p>
+        </header>
 
-    <h1>⚡ AI Inbox Intelligence</h1>
-    <p class="subtitle">Smart Email Classification using AI</p>
+        <section class="controls">
+            <label for="agent-select"><strong>Choose Agent:</strong></label>
+            <select id="agent-select">
+                <option value="rule">Rule Agent</option>
+                <option value="random">Random Agent</option>
+                <option value="learned">Learned Agent</option>
+            </select>
 
-    <div id="email-box">
-        <h3 id="subject">Subject will appear here</h3>
-        <p id="email-text">Click "Next Email" to begin</p>
-        <p><strong>Sender:</strong> <span id="sender">---</span></p>
-    </div>
+            <button onclick="resetDemo()">Reset Demo</button>
+            <button onclick="loadNextEmail()">Next Email</button>
+            <button onclick="runAgent()">Run Agent</button>
+        </section>
 
-    <button onclick="nextEmail()">Next Email</button>
+        <section id="email-box" class="card">
+            <h2 id="subject">Subject will appear here</h2>
+            <p><strong>Sender:</strong> <span id="sender">---</span></p>
+            <p id="email-text">Click “Next Email” to begin.</p>
+        </section>
 
-    <div id="result">
-        <h2 id="prediction"></h2>
+        <section id="result-box" class="card">
+            <h3>Prediction Result</h3>
+            <p><strong>Prediction:</strong> <span id="prediction">---</span></p>
+            <p><strong>True Label:</strong> <span id="true-label">---</span></p>
+            <p><strong>Reward:</strong> <span id="reward">0</span></p>
+            <p><strong>Status:</strong> <span id="status">---</span></p>
+        </section>
+
+        <section id="metrics-box" class="card">
+            <h3>Live Metrics</h3>
+            <p><strong>Processed:</strong> <span id="processed">0</span></p>
+            <p><strong>Accuracy:</strong> <span id="accuracy">0%</span></p>
+            <p><strong>Total Reward:</strong> <span id="total-reward">0</span></p>
+            <p><strong>Spam Caught:</strong> <span id="spam-caught">0</span></p>
+            <p><strong>Important Caught:</strong> <span id="important-caught">0</span></p>
+        </section>
     </div>
 
     <script src="script.js"></script>
