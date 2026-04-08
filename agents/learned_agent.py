@@ -1,16 +1,32 @@
-# agents/learned_agent.py
+from typing import Any, Dict
 
 from transformers import pipeline
+
 from agents.base_agent import BaseAgent
+from agents.constants import LABELS
+
 
 class LearnedAgent(BaseAgent):
-    def __init__(self):
-        self.classifier = pipeline("zero-shot-classification")
-        self.labels = ["important", "spam", "promotion", "social", "later"]
+    """
+    Zero-shot semantic classification agent.
+    """
 
-    def act(self, state):
-        result = self.classifier(
-            state["email_text"],
-            self.labels
+    name = "learned_agent"
+
+    def __init__(self, model_name: str = "facebook/bart-large-mnli"):
+        self.labels = LABELS
+        self.classifier = pipeline(
+            "zero-shot-classification",
+            model=model_name
         )
+
+    def _get_text(self, state: Dict[str, Any]) -> str:
+        subject = str(state.get("subject", ""))
+        body = str(state.get("email_text", ""))
+        sender = str(state.get("sender", ""))
+        return f"Sender: {sender}\nSubject: {subject}\nBody: {body}".strip()
+
+    def act(self, state: Dict[str, Any]) -> str:
+        text = self._get_text(state)
+        result = self.classifier(text, self.labels)
         return result["labels"][0]
