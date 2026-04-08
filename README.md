@@ -4,76 +4,142 @@
 
 ---
 
-## 🔍 Overview
+## 🔷 Executive Summary
 
-Modern inboxes are chaotic. Important emails get buried, spam slips through, and users waste time manually sorting everything.
+Modern inboxes are overloaded with noise — spam, promotions, and low-priority updates — making it difficult to identify what truly matters.
 
-This project models **email management as a sequential decision-making problem**, where AI agents must intelligently triage emails under uncertainty.
+**AI Inbox Intelligence** is a lightweight, agent-driven simulation system that models inbox management as a **sequential decision-making problem**. Instead of static filtering, the system evaluates how different AI agents perform in triaging emails under uncertainty using a reward-driven environment.
 
-Instead of building a simple classifier, we created a **simulation environment** where multiple agents interact with an inbox and learn to make decisions based on rewards.
-
----
-
-## 🧠 Key Idea
-
-We treat inbox decluttering as an **agentic problem**:
-
-* Each email is a **state**
-* The agent selects an **action (label)**
-* The environment returns a **reward**
-* The process repeats over time
-
-This transforms email filtering into a **reinforcement-style decision system**, not just static classification.
+This project demonstrates how **agentic AI systems** can move beyond classification into **decision-making frameworks** that balance accuracy, risk, and priorities.
 
 ---
 
-## ⚙️ System Architecture
+## 🎯 Problem Statement
+
+Traditional email filtering systems rely on:
+
+* static rules
+* limited contextual understanding
+* rigid classification pipelines
+
+These systems struggle with:
+
+* ambiguous emails
+* evolving spam patterns
+* prioritization under uncertainty
+
+We reframe inbox management as:
+
+> **A dynamic environment where agents must make optimal decisions over time with incomplete information.**
+
+---
+
+## 🧠 Solution Overview
+
+This project introduces a **simulation-first approach** where:
+
+* Emails are treated as **states**
+* Agents select **actions (labels)**
+* A reward system evaluates decisions
+* Performance is measured over multiple steps
+
+The system supports multiple agent strategies, enabling comparison between:
+
+* baseline (random)
+* heuristic (rule-based)
+* semantic (LLM-powered)
+
+---
+
+## 🏗️ System Architecture
 
 ```mermaid
 flowchart TD
-    A[User Interface] --> B[Flask Backend]
-    B --> C[Agent (Random / Rule / Learned)]
-    C --> D[Inbox Environment]
-    D --> E[Reward Function]
-    D --> F[Email Generator]
-    E --> C
-    F --> D
+    UI[User Interface] --> API[Flask Backend API]
+
+    API --> AGENTS[Agent Layer]
+    AGENTS --> R[Random Agent]
+    AGENTS --> RL[Rule Agent]
+    AGENTS --> L[Learned Agent]
+
+    AGENTS --> ENV[Inbox Environment]
+
+    ENV --> GEN[Email Generator]
+    ENV --> REWARD[Reward Function]
+
+    REWARD --> AGENTS
+    GEN --> ENV
 ```
 
 ---
 
-## 🤖 Agents Implemented
+## 🧩 Core Components
 
-### 1. Random Agent
+### 1. Agent Layer
 
-* Selects labels randomly
-* Acts as a baseline
-* Helps measure minimum performance
+Implements multiple decision-making strategies:
 
-### 2. Rule-Based Agent
+* **Random Agent**
+  Baseline agent for benchmarking performance
 
-* Uses keyword heuristics
-* Mimics traditional filtering systems
-* Fast and interpretable
+* **Rule-Based Agent**
+  Keyword-driven heuristics simulating traditional filters
 
-### 3. Learned Agent (Zero-Shot NLP)
-
-* Uses HuggingFace transformers
-* Understands semantic meaning of emails
-* Generalizes beyond fixed rules
+* **Learned Agent (Zero-shot NLP)**
+  Semantic reasoning using transformer-based models
 
 ---
 
-## 📦 Environment Design
+### 2. Inbox Environment
 
-### State
+Simulates a continuous email stream:
 
-Each email contains:
+* generates emails dynamically
+* tracks agent decisions
+* applies reward logic
+* maintains episode lifecycle
+
+---
+
+### 3. Email Generator
+
+Creates diverse synthetic emails across categories:
+
+* important
+* spam
+* promotion
+* social
+* later
+
+Introduces variability and ambiguity to simulate real-world inbox noise.
+
+---
+
+### 4. Reward Function
+
+Encodes decision quality:
+
+* ✅ Correct classification → positive reward
+* ❌ Incorrect classification → penalty
+* 🚨 Missing important emails → higher penalty
+* 🛑 Detecting spam → bonus
+
+This enforces **risk-aware decision-making**.
+
+---
+
+## ⚙️ State & Action Design
+
+### State Representation
+
+Each email consists of:
 
 * subject
 * sender
 * email_text
 * hidden true_label
+
+---
 
 ### Action Space
 
@@ -81,18 +147,11 @@ Each email contains:
 important | spam | promotion | social | later
 ```
 
-### Reward Function
-
-* ✅ Correct classification → positive reward
-* ❌ Incorrect classification → penalty
-* 🚨 Missing important emails → higher penalty
-* 🛑 Catching spam → bonus reward
-
-This encourages **safe and intelligent decision-making**.
-
 ---
 
-## 📊 Evaluation Metrics
+## 📊 Evaluation Framework
+
+Agents are evaluated across multiple dimensions:
 
 * Accuracy
 * Total Reward
@@ -100,31 +159,32 @@ This encourages **safe and intelligent decision-making**.
 * Processed Emails
 * Correct Predictions
 
+This enables **comparative benchmarking** between agent strategies.
+
 ---
 
-## 🖥️ Demo Features
+## 🖥️ Demo Capabilities
 
 * Interactive inbox simulation
-* Switch between agents (Random / Rule / Learned)
-* Real-time predictions
-* Live metrics:
+* Real-time agent predictions
+* Dynamic switching between agents
+* Live performance metrics:
 
   * accuracy
-  * total reward
-  * spam caught
-  * important emails handled
-* Continuous stream of emails
+  * reward accumulation
+  * spam detection
+  * important email handling
 
 ---
 
-## ▶️ How to Run
+## ▶️ Local Setup
 
 ```bash
 pip install -r requirements.txt
 python demo/app.py
 ```
 
-Open in browser:
+Access the application at:
 
 ```text
 http://127.0.0.1:5000
@@ -132,92 +192,89 @@ http://127.0.0.1:5000
 
 ---
 
-## 🐳 Docker Run
+## 🐳 Docker Deployment
 
-Build and run with Docker:
+Build and run using Docker:
 
 ```bash
 docker build -t email-declutter .
 docker run -p 5000:5000 email-declutter
 ```
 
-Or use Docker Compose:
+Or using Docker Compose:
 
 ```bash
 docker compose up --build
 ```
 
-Then open:
-
-```text
-http://127.0.0.1:5000
-```
-
 ---
 
-## 🎯 Why This Matters
+## 🌍 Business Relevance
 
-Most email systems rely on static filtering rules.
+This framework mirrors real-world applications in:
 
-This project demonstrates:
+* email clients (Gmail, Outlook)
+* notification management systems
+* enterprise workflow prioritization
+* AI copilots and assistants
 
-* **Adaptive decision-making**
-* **Agent-based intelligence**
-* **Reward-driven optimization**
-* **Handling noisy and ambiguous inputs**
+It highlights the transition from:
 
-It reflects real-world challenges in:
-
-* email clients
-* notification systems
-* task prioritization
-* AI assistants
+> **rule-based automation → intelligent decision systems**
 
 ---
 
 ## ⚠️ Limitations
 
-* Synthetic email dataset
-* Simple reward function
-* No long-term memory across sessions
-* Learned agent depends on external model loading
+* synthetic dataset (not real emails)
+* simplified reward function
+* no long-term memory or user personalization
+* dependency on external models for learned agent
 
 ---
 
-## 🚀 Future Improvements
+## 🚀 Future Roadmap
 
-* Reinforcement learning (policy optimization)
-* Memory-based agents (context awareness)
-* Multi-step decision strategies (archive, reply, defer)
-* Real email dataset integration
-* Confidence-based routing (human-in-loop)
+* reinforcement learning (policy optimization)
+* memory-aware agents (context persistence)
+* multi-action workflows (archive, reply, defer)
+* real-world dataset integration
+* human-in-the-loop decision systems
+* confidence-based escalation
 
 ---
 
-## 🧩 Hackathon Alignment
+## 🧠 Hackathon Alignment
 
-This project strongly aligns with:
+This project directly aligns with:
 
-* ✅ Agentic AI systems
+* ✅ Agentic AI design
 * ✅ Environment-based learning
 * ✅ Decision-making under uncertainty
-* ✅ Multiple competing agent strategies
+* ✅ Multi-agent comparison
 * ✅ Reward-driven evaluation
 
 ---
 
-## 🏁 Final Note
+## 🏁 Closing Note
 
-This is not just an email classifier.
+AI Inbox Intelligence is not just a classifier.
 
-It is a **simulation framework for intelligent inbox management**, where agents learn to balance priorities, reduce clutter, and act under imperfect information.
+It is a **decision simulation framework** that demonstrates how AI agents can:
+
+* prioritize effectively
+* handle ambiguity
+* optimize outcomes over time
+
+This reflects the next evolution of AI systems —
+from prediction → to intelligent action.
 
 ---
 
-## 🔗 Tech Stack
+## 🔗 Technology Stack
 
 * Python
 * Flask
 * Transformers (HuggingFace)
-* HTML / CSS / JS
-* Custom Simulation Environment
+* HTML / CSS / JavaScript
+* Custom Simulation Engine
