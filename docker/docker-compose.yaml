@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  email-declutter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: email-declutter
+    ports:
+      - "8501:8501"
+    environment:
+      - PYTHONUNBUFFERED=1
