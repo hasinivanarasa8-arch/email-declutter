@@ -1,5 +1,20 @@
-# agents/base_agent.py
+from abc import ABC, abstractmethod
+from typing import Any, Dict
 
-class BaseAgent:
-    def act(self, state):
-        raise NotImplementedError("Subclasses must implement this method")
+
+class BaseAgent(ABC):
+    """
+    Base class for all email triage agents.
+
+    Each agent receives a state dictionary and returns
+    a single label string representing its decision.
+    """
+
+    name = "base_agent"
+
+    @abstractmethod
+    def act(self, state: Dict[str, Any]) -> str:
+        """
+        Predict a label for the given email state.
+        """
+        raise NotImplementedError
