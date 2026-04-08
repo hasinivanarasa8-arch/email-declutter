@@ -1,5 +1,3 @@
-# env/generator.py
-
 import random
 from env.state_schema import create_state
 
