@@ -3,53 +3,136 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AI Inbox Intelligence</title>
+    <title>Inbox Triage AI Agent</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>⚡ AI Inbox Intelligence</h1>
-            <p class="subtitle">
-                Agentic inbox triage simulation for smart email classification under uncertainty
-            </p>
-        </header>
+    <div class="app-shell">
+        <div class="background-glow glow-one"></div>
+        <div class="background-glow glow-two"></div>
 
-        <section class="controls">
-            <label for="agent-select"><strong>Choose Agent:</strong></label>
-            <select id="agent-select">
-                <option value="rule">Rule Agent</option>
-                <option value="random">Random Agent</option>
-                <option value="learned">Learned Agent</option>
-            </select>
+        <div class="container">
+            <header class="hero">
+                <div class="hero-badge">AI Ops Dashboard</div>
+                <div class="hero-main">
+                    <div class="hero-icon">✉️</div>
+                    <div>
+                        <h1>Inbox Triage AI Agent</h1>
+                        <p class="subtitle">
+                            Agentic inbox triage simulation for intelligent email classification under uncertainty
+                        </p>
+                    </div>
+                </div>
+            </header>
 
-            <button onclick="resetDemo()">Reset Demo</button>
-            <button onclick="loadNextEmail()">Next Email</button>
-            <button onclick="runAgent()">Run Agent</button>
-        </section>
+            <section class="toolbar card">
+                <div class="toolbar-left">
+                    <label for="agent-select">Choose Agent</label>
+                    <select id="agent-select">
+                        <option value="rule">Rule Agent</option>
+                        <option value="random">Random Agent</option>
+                        <option value="learned" selected>Learned Agent</option>
+                    </select>
+                </div>
 
-        <section id="email-box" class="card">
-            <h2 id="subject">Subject will appear here</h2>
-            <p><strong>Sender:</strong> <span id="sender">---</span></p>
-            <p id="email-text">Click “Next Email” to begin.</p>
-        </section>
+                <div class="toolbar-actions">
+                    <button class="btn btn-secondary" onclick="resetDemo()">Reset Demo</button>
+                    <button class="btn btn-secondary" onclick="loadNextEmail()">Next Email</button>
+                    <button class="btn btn-primary" onclick="runAgent()">Run Agent</button>
+                </div>
+            </section>
 
-        <section id="result-box" class="card">
-            <h3>Prediction Result</h3>
-            <p><strong>Prediction:</strong> <span id="prediction">---</span></p>
-            <p><strong>True Label:</strong> <span id="true-label">---</span></p>
-            <p><strong>Reward:</strong> <span id="reward">0</span></p>
-            <p><strong>Status:</strong> <span id="status">---</span></p>
-        </section>
+            <main class="dashboard-grid">
+                <section id="email-box" class="card email-card">
+                    <div class="section-header">
+                        <span class="section-kicker">Live Input</span>
+                        <h2>Current Email</h2>
+                    </div>
 
-        <section id="metrics-box" class="card">
-            <h3>Live Metrics</h3>
-            <p><strong>Processed:</strong> <span id="processed">0</span></p>
-            <p><strong>Accuracy:</strong> <span id="accuracy">0%</span></p>
-            <p><strong>Total Reward:</strong> <span id="total-reward">0</span></p>
-            <p><strong>Spam Caught:</strong> <span id="spam-caught">0</span></p>
-            <p><strong>Important Caught:</strong> <span id="important-caught">0</span></p>
-        </section>
+                    <div class="email-meta">
+                        <div class="meta-row">
+                            <span class="meta-label">Subject</span>
+                            <h3 id="subject">Subject will appear here</h3>
+                        </div>
+
+                        <div class="meta-row">
+                            <span class="meta-label">Sender</span>
+                            <span id="sender" class="sender-pill">---</span>
+                        </div>
+                    </div>
+
+                    <div class="email-body">
+                        <span class="meta-label">Content</span>
+                        <p id="email-text">Click “Next Email” to begin.</p>
+                    </div>
+                </section>
+
+                <aside class="right-column">
+                    <section id="result-box" class="card">
+                        <div class="section-header">
+                            <span class="section-kicker">Model Output</span>
+                            <h3>Prediction Result</h3>
+                        </div>
+
+                        <div class="result-grid">
+                            <div class="info-block">
+                                <span class="info-label">Prediction</span>
+                                <span id="prediction" class="badge neutral">---</span>
+                            </div>
+
+                            <div class="info-block">
+                                <span class="info-label">True Label</span>
+                                <span id="true-label" class="badge neutral">---</span>
+                            </div>
+
+                            <div class="info-block">
+                                <span class="info-label">Reward</span>
+                                <span id="reward" class="reward-pill neutral">0</span>
+                            </div>
+
+                            <div class="info-block">
+                                <span class="info-label">Status</span>
+                                <span id="status" class="status-pill neutral">---</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="metrics-box" class="card">
+                        <div class="section-header">
+                            <span class="section-kicker">Performance</span>
+                            <h3>Live Metrics</h3>
+                        </div>
+
+                        <div class="metrics-grid">
+                            <div class="metric-tile">
+                                <span class="metric-label">Processed</span>
+                                <span id="processed" class="metric-value">0</span>
+                            </div>
+
+                            <div class="metric-tile">
+                                <span class="metric-label">Accuracy</span>
+                                <span id="accuracy" class="metric-value">0%</span>
+                            </div>
+
+                            <div class="metric-tile">
+                                <span class="metric-label">Total Reward</span>
+                                <span id="total-reward" class="metric-value">0</span>
+                            </div>
+
+                            <div class="metric-tile">
+                                <span class="metric-label">Spam Caught</span>
+                                <span id="spam-caught" class="metric-value">0</span>
+                            </div>
+
+                            <div class="metric-tile">
+                                <span class="metric-label">Important Caught</span>
+                                <span id="important-caught" class="metric-value">0</span>
+                            </div>
+                        </div>
+                    </section>
+                </aside>
+            </main>
+        </div>
     </div>
 
     <script src="script.js"></script>

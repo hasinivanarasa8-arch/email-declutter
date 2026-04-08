@@ -1,5 +1,3 @@
-# agents/rule_agent.py
-
 from typing import Any, Dict, List
 
 from agents.base_agent import BaseAgent

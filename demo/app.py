@@ -1,5 +1,9 @@
-import streamlit as st
+import os
+import sys
 
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+import streamlit as st
 from env.inbox_env import InboxEnv
 from agents.random_agent import RandomAgent
 from agents.rule_agent import RuleAgent
