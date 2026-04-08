@@ -1,5 +1,3 @@
-# env/inbox_env.py
-
 from env.generator import generate_email
 from env.reward import calculate_reward
 
