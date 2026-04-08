@@ -15,6 +15,7 @@ class LearnedAgent(BaseAgent):
 
     def __init__(self, model_name: str = "facebook/bart-large-mnli"):
         self.labels = LABELS
+        self.last_result = None
         self.classifier = pipeline(
             "zero-shot-classification",
             model=model_name
@@ -29,4 +30,5 @@ class LearnedAgent(BaseAgent):
     def act(self, state: Dict[str, Any]) -> str:
         text = self._get_text(state)
         result = self.classifier(text, self.labels)
+        self.last_result = result
         return result["labels"][0]
