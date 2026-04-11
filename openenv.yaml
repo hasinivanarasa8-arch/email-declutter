@@ -1,0 +1,14 @@
+name: email-declutter
+description: OpenEnv-compatible inbox triage environment with reset, step, and state endpoints.
+entrypoint: main.py
+
+endpoints:
+  reset:
+    path: /reset
+    method: POST
+  step:
+    path: /step
+    method: POST
+  state:
+    path: /state
+    method: GET
