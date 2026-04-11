@@ -1,53 +1,35 @@
-# 🚀 AI Inbox Intelligence
+# 🚀 Email Declutter OpenEnv
 
-### Agentic Email Triage under Uncertainty
+### Agentic Email Triage Environment with OpenEnv API + Interactive Demo
 
 ---
 
-## 🔷 Executive Summary
+## 🔷 Overview
 
-Modern inboxes are overloaded with noise — spam, promotions, and low-priority updates — making it difficult to identify what truly matters.
+Email Declutter OpenEnv is an agent-driven inbox triage environment built for the OpenEnv Hackathon. It models email handling as a sequential decision-making problem, where an AI agent processes emails and takes actions such as archive, flag, reply, and delete.
 
-**AI Inbox Intelligence** is a lightweight, agent-driven simulation system that models inbox management as a **sequential decision-making problem**. Instead of static filtering, the system evaluates how different AI agents perform in triaging emails under uncertainty using a reward-driven environment.
-
-This project demonstrates how **agentic AI systems** can move beyond classification into **decision-making frameworks** that balance accuracy, risk, and priorities.
+The system exposes a fully OpenEnv-compliant API for automated evaluation and also includes a Streamlit-based UI for interactive demonstration.
 
 ---
 
 ## 🎯 Problem Statement
 
-Traditional email filtering systems rely on:
+Modern inboxes are overloaded with spam, promotions, and low-priority updates. Traditional systems rely on static filters and fail to adapt to ambiguity, prioritize dynamically, and handle evolving patterns.
 
-* static rules
-* limited contextual understanding
-* rigid classification pipelines
-
-These systems struggle with:
-
-* ambiguous emails
-* evolving spam patterns
-* prioritization under uncertainty
-
-We reframe inbox management as:
-
-> **A dynamic environment where agents must make optimal decisions over time with incomplete information.**
+We reframe inbox management as a decision-making environment where agents must act optimally over time under uncertainty.
 
 ---
 
-## 🧠 Solution Overview
+## 🧠 Solution Approach
 
-This project introduces a **simulation-first approach** where:
+This project follows an environment-first design:
 
-* Emails are treated as **states**
-* Agents select **actions (labels)**
-* A reward system evaluates decisions
-* Performance is measured over multiple steps
+- Emails represent states
+- Actions represent decisions
+- Rewards represent feedback
+- Episodes represent workflows
 
-The system supports multiple agent strategies, enabling comparison between:
-
-* baseline (random)
-* heuristic (rule-based)
-* semantic (LLM-powered)
+Agents interact with the environment and are evaluated based on cumulative performance.
 
 ---
 
@@ -55,226 +37,185 @@ The system supports multiple agent strategies, enabling comparison between:
 
 ```mermaid
 flowchart TD
-    UI[User Interface] --> API[Flask Backend API]
-
-    API --> AGENTS[Agent Layer]
-    AGENTS --> R[Random Agent]
-    AGENTS --> RL[Rule Agent]
-    AGENTS --> L[Learned Agent]
-
-    AGENTS --> ENV[Inbox Environment]
-
+    UI[Streamlit UI] --> API[FastAPI OpenEnv API]
+    API --> ENV[Inbox Environment]
     ENV --> GEN[Email Generator]
-    ENV --> REWARD[Reward Function]
-
-    REWARD --> AGENTS
-    GEN --> ENV
+    ENV --> REWARD[Reward Engine]
+    ENV --> AGENT[Agent Actions]
+    AGENT --> ENV
+    REWARD --> AGENT
 ```
 
 ---
 
 ## 🧩 Core Components
 
-### 1. Agent Layer
+### Inbox Environment
 
-Implements multiple decision-making strategies:
+- Simulates email stream
+- Maintains state and progression
+- Tracks unread count
+- Applies reward logic
 
-* **Random Agent**
-  Baseline agent for benchmarking performance
+### Email Generator
 
-* **Rule-Based Agent**
-  Keyword-driven heuristics simulating traditional filters
+Generates synthetic emails across categories:
 
-* **Learned Agent (Zero-shot NLP)**
-  Semantic reasoning using transformer-based models
-
----
-
-### 2. Inbox Environment
-
-Simulates a continuous email stream:
-
-* generates emails dynamically
-* tracks agent decisions
-* applies reward logic
-* maintains episode lifecycle
-
----
-
-### 3. Email Generator
-
-Creates diverse synthetic emails across categories:
-
-* important
-* spam
-* promotion
-* social
-* later
-
-Introduces variability and ambiguity to simulate real-world inbox noise.
-
----
-
-### 4. Reward Function
-
-Encodes decision quality:
-
-* ✅ Correct classification → positive reward
-* ❌ Incorrect classification → penalty
-* 🚨 Missing important emails → higher penalty
-* 🛑 Detecting spam → bonus
-
-This enforces **risk-aware decision-making**.
-
----
-
-## ⚙️ State & Action Design
-
-### State Representation
-
-Each email consists of:
-
-* subject
-* sender
-* email_text
-* hidden true_label
-
----
+- important
+- spam
+- promotion
+- social
 
 ### Action Space
 
-```text
-important | spam | promotion | social | later
+`archive | flag | reply | delete`
+
+### Reward Function
+
+- Correct action → positive reward
+- Incorrect action → penalty
+- Missing important email → high penalty
+- Handling spam correctly → bonus
+
+---
+
+## ⚙️ OpenEnv API
+
+### POST /reset
+
+Starts a fresh episode and returns the initial observation.
+
+### POST /step
+
+Accepts an action input and returns the next state, reward, and done flag.
+
+### GET /state
+
+Returns the current environment state.
+
+---
+
+## 📦 Example API Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant API
+    participant Env
+
+    User->>API: POST /reset
+    API->>Env: reset()
+    Env-->>API: initial state
+    API-->>User: observation
+
+    User->>API: POST /step
+    API->>Env: step(action)
+    Env-->>API: next state + reward + done
+    API-->>User: response
 ```
 
 ---
 
-## 📊 Evaluation Framework
+## 🖥️ Interactive Demo
 
-Agents are evaluated across multiple dimensions:
+The project includes a Streamlit UI for:
 
-* Accuracy
-* Total Reward
-* Label-wise Accuracy
-* Processed Emails
-* Correct Predictions
+- visualizing inbox state
+- simulating actions
+- observing rewards
 
-This enables **comparative benchmarking** between agent strategies.
-
----
-
-## 🖥️ Demo Capabilities
-
-* Interactive inbox simulation
-* Real-time agent predictions
-* Dynamic switching between agents
-* Live performance metrics:
-
-  * accuracy
-  * reward accumulation
-  * spam detection
-  * important email handling
-
----
-
-## ▶️ Local Setup
+### Run locally
 
 ```bash
 pip install -r requirements.txt
-python demo/app.py
-```
-
-Access the application at:
-
-```text
-http://127.0.0.1:5000
+streamlit run demo/app.py
 ```
 
 ---
 
 ## 🐳 Docker Deployment
 
-Build and run using Docker:
-
 ```bash
 docker build -t email-declutter .
-docker run -p 5000:5000 email-declutter
-```
-
-Or using Docker Compose:
-
-```bash
-docker compose up --build
+docker run -p 7860:7860 email-declutter
 ```
 
 ---
 
-## 🌍 Business Relevance
+## 📁 Project Structure
 
-This framework mirrors real-world applications in:
-
-* email clients (Gmail, Outlook)
-* notification management systems
-* enterprise workflow prioritization
-* AI copilots and assistants
-
-It highlights the transition from:
-
-> **rule-based automation → intelligent decision systems**
-
----
-
-## ⚠️ Limitations
-
-* synthetic dataset (not real emails)
-* simplified reward function
-* no long-term memory or user personalization
-* dependency on external models for learned agent
+```text
+.
+├── main.py
+├── openenv.yaml
+├── inference.py
+├── Dockerfile
+├── requirements.txt
+├── env/
+│   ├── __init__.py
+│   └── inbox_env.py
+└── demo/
+    └── app.py
+```
 
 ---
 
-## 🚀 Future Roadmap
+## 📊 Evaluation
 
-* reinforcement learning (policy optimization)
-* memory-aware agents (context persistence)
-* multi-action workflows (archive, reply, defer)
-* real-world dataset integration
-* human-in-the-loop decision systems
-* confidence-based escalation
+The environment evaluates agents using:
+
+- total reward
+- decision accuracy
+- task completion behavior
+- penalty handling
 
 ---
 
 ## 🧠 Hackathon Alignment
 
-This project directly aligns with:
+This project satisfies the core OpenEnv requirements:
 
-* ✅ Agentic AI design
-* ✅ Environment-based learning
-* ✅ Decision-making under uncertainty
-* ✅ Multi-agent comparison
-* ✅ Reward-driven evaluation
-
----
-
-## 🏁 Closing Note
-
-AI Inbox Intelligence is not just a classifier.
-
-It is a **decision simulation framework** that demonstrates how AI agents can:
-
-* prioritize effectively
-* handle ambiguity
-* optimize outcomes over time
-
-This reflects the next evolution of AI systems —
-from prediction → to intelligent action.
+- reset(), step(), and state() implemented
+- OpenEnv API compliant
+- Dockerized deployment
+- inference script included
+- multi-action environment design
+- public deployment for evaluator access
 
 ---
 
-## 🔗 Technology Stack
+## 🌍 Business Relevance
 
-* Python
-* Flask
-* Transformers (HuggingFace)
-* HTML / CSS / JavaScript
-* Custom Simulation Engine
+This framework is relevant to:
+
+- email clients
+- enterprise workflows
+- notification management systems
+- AI copilots and assistants
+
+It demonstrates the transition from static filtering to intelligent decision-making systems.
+
+---
+
+## ⚠️ Limitations
+
+- synthetic dataset
+- simplified reward logic
+- no user personalization
+- no long-term memory
+
+---
+
+## 🚀 Future Work
+
+- reinforcement learning agents
+- memory-aware systems
+- real-world data integration
+- confidence-based escalation
+- human-in-the-loop workflows
+
+---
+
+## 🏁 Conclusion
+
+Email Declutter OpenEnv demonstrates the shift from static classification systems to intelligent decision-making environments. It reflects the next generation of agentic AI systems, where success is measured not only by prediction accuracy but by the quality of actions taken over time.
