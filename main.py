@@ -7,7 +7,8 @@ from env.inbox_env import InboxEnv
 
 app = FastAPI(title="Email Declutter OpenEnv API", version="1.0.0")
 
-# Single shared environment instance for hackathon evaluation
+server = app
+
 env = InboxEnv()
 initialized = False
 
@@ -56,7 +57,6 @@ def step(request: StepRequest) -> Dict[str, Any]:
     global initialized
 
     if not initialized:
-        # Auto-reset so evaluator does not fail just because step came first
         env.reset()
         initialized = True
 
@@ -210,8 +210,6 @@ def grade() -> Dict[str, Any]:
         initialized = True
 
     return env.grade_episode()
-
-server = app
 
 def main():
     import uvicorn
