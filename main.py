@@ -104,3 +104,7 @@ def grade() -> Dict[str, Any]:
         initialized = True
 
     return env.grade_episode()
+
+def server():
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=7860)
