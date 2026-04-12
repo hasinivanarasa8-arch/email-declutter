@@ -1,6 +1,10 @@
+from fastapi import FastAPI
 from env.inbox_env import InboxEnv
 
-def main():
+app = FastAPI()
+
+@app.get("/")
+def run_agent():
     env = InboxEnv()
     obs = env.reset(seed=0)
     total_reward = 0
@@ -11,12 +15,9 @@ def main():
         obs, reward, done, info = env.step(action)
         total_reward += reward
 
-    print({
+    return {
         "status": "ok",
         "total_reward": total_reward,
         "final_state": env.state(),
         "grade": env.grade_episode()
-    })
-
-if __name__ == "__main__":
-    main()
+    }
